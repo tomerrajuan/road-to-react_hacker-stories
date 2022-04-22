@@ -2,7 +2,7 @@ import * as React from 'react';
 import List from './components/List';
 import Search from './components/Search';
 
-function getTitle(title) {
+const getTitle = (title) => {
   return title;
 }
 
