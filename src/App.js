@@ -4,16 +4,14 @@ import Search from './components/Search';
 
 const getTitle = (title) => {
   return title;
-}
+};
 
-function App() {
-  return (
-    <div>
-      <h1>Hello {getTitle('React')}</h1>
-      <Search />
-      <List />
-    </div>
-  );
-}
+const App = () => (
+  <div>
+    <h1>Hello {getTitle('React')}</h1>
+    <Search />
+    <List />
+  </div>
+);
 
 export default App;
