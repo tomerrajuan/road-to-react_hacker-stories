@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useState } from 'react';
+
 import List from './components/List';
 import Search from './components/Search';
 
@@ -26,14 +28,16 @@ const getTitle = (title) => {
 };
 
 export default function App() {
+  const [inputVal, setInputVal] = useState();
+
   const onSearch = (e) => {
-    console.log('we are here: ', e);
+    setInputVal(e);
   };
 
   return (
     <div>
       <h1>Hello {getTitle('React')}</h1>
-      <Search onSearch={onSearch} />
+      <Search onSearch={onSearch} value={inputVal} />
       <List list={stories} />
     </div>
   );

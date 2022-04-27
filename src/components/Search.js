@@ -1,23 +1,18 @@
-﻿import React, { useState } from 'react';
+﻿import React from 'react';
 
-const Search = ({ onSearch }) => {
-  const [inputVal, setInputVal] = useState();
-
-  const handleChange = (event) => {
-    setInputVal(event.target.value);
-    // synthetic event
-    console.log(event);
-    // value of target (here: element)
-    onSearch(event.target.value);
-  };
+const Search = ({ onSearch, value }) => {
 
   return (
     <>
       <div>
         <label htmlFor="search">Search: </label>
-        <input id="search" type="text" onChange={handleChange} />
+        <input
+          id="search"
+          type="text"
+          onChange={(e) => onSearch(e.target.value)}
+        />
       </div>
-      <p>{inputVal}</p>
+      <p>{value}</p>
     </>
   );
 };
