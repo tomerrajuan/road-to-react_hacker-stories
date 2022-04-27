@@ -25,13 +25,16 @@ const getTitle = (title) => {
   return title;
 };
 
-const App = () => (
-  
-  <div>
-    <h1>Hello {getTitle('React')}</h1>
-    <Search />
-    <List list={stories}/>
-  </div>
-);
+export default function App() {
+  const onSearch = (e) => {
+    console.log('we are here: ', e);
+  };
 
-export default App;
+  return (
+    <div>
+      <h1>Hello {getTitle('React')}</h1>
+      <Search onSearch={onSearch} />
+      <List list={stories} />
+    </div>
+  );
+}

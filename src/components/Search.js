@@ -1,6 +1,6 @@
 ﻿import React, { useState } from 'react';
 
-const Search = () => {
+const Search = ({ onSearch }) => {
   const [inputVal, setInputVal] = useState();
 
   const handleChange = (event) => {
@@ -8,7 +8,7 @@ const Search = () => {
     // synthetic event
     console.log(event);
     // value of target (here: element)
-    console.log(event.target.value);
+    onSearch(event.target.value);
   };
 
   return (
