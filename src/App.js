@@ -28,7 +28,7 @@ const getTitle = (title) => {
 };
 
 export default function App() {
-  const [inputVal, setInputVal] = useState();
+  const [inputVal, setInputVal] = useState('React');
 
   const onSearch = (e) => {
     setInputVal(e);
@@ -37,7 +37,7 @@ export default function App() {
   return (
     <div>
       <h1>Hello {getTitle('React')}</h1>
-      <Search onSearch={onSearch} value={inputVal} />
+      <Search onSearch={onSearch} search={inputVal} />
       <List list={stories} />
     </div>
   );
