@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
-
+import { useState, useEffect } from 'react';
 import List from './components/List';
 import Search from './components/Search';
 
@@ -23,22 +22,37 @@ const stories = [
   },
 ];
 
-const getTitle = (title) => {
-  return title;
+const useStorageState = (key, initialState) => {
+  const [value, setValue] = React.useState(
+    localStorage.getItem(key) || initialState
+  );
+
+  React.useEffect(() => {
+    localStorage.setItem(key, value);
+  }, [value, key]);
+
+  return [value, setValue];
 };
 
 export default function App() {
-  const [inputVal, setInputVal] = useState('React');
-
-  const onSearch = (e) => {
-    setInputVal(e);
+  const [searchTerm, setSearchTerm] = useStorageState(
+    'search',
+    'React'
+  );
+  
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
   };
 
+  const searchedStories = stories.filter((story) =>
+    story.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  
   return (
     <div>
-      <h1>Hello {getTitle('React')}</h1>
-      <Search onSearch={onSearch} search={inputVal} />
-      <List list={stories} />
+      <h1>Hello World</h1>
+      <Search onSearch={handleSearch} search={searchTerm} />
+      <List list={searchedStories} />
     </div>
   );
 }
