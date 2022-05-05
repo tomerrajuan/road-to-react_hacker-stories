@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
 import List from './components/List';
-import Search from './components/Search';
+import InputWithLabel from './components/InputWithLabel';
 
 const stories = [
   {
@@ -51,7 +50,12 @@ export default function App() {
   return (
     <div>
       <h1>Hello World</h1>
-      <Search onSearch={handleSearch} search={searchTerm} />
+      <InputWithLabel
+        id="search"
+        label="Search"
+        value={searchTerm}
+        onInputChange={handleSearch}
+      />
       <List list={searchedStories} />
     </div>
   );
