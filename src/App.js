@@ -54,6 +54,7 @@ export default function App() {
         id="search"
         value={searchTerm}
         onInputChange={handleSearch}
+        isFocused
       >
         
           <p>
