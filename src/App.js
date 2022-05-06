@@ -1,25 +1,7 @@
 import * as React from 'react';
 import List from './components/List';
 import InputWithLabel from './components/InputWithLabel';
-
-const initialStories = [
-  {
-    title: 'React',
-    url: 'https://reactjs.org/',
-    author: 'Jordan Walke',
-    num_comments: 3,
-    points: 4,
-    objectID: 0,
-  },
-  {
-    title: 'Redux',
-    url: 'https://redux.js.org/',
-    author: 'Dan Abramov, Andrew Clark',
-    num_comments: 2,
-    points: 5,
-    objectID: 1,
-  },
-];
+import {initialStories} from './utils/stories';
 
 const useStorageState = (key, initialState) => {
   const [value, setValue] = React.useState(
