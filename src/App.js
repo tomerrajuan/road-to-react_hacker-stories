@@ -1,7 +1,7 @@
 import * as React from 'react';
 import List from './components/List';
 import InputWithLabel from './components/InputWithLabel';
-import {initialStories} from './utils/stories';
+import { initialStories } from './utils/stories';
 
 const useStorageState = (key, initialState) => {
   const [value, setValue] = React.useState(
@@ -17,7 +17,7 @@ const useStorageState = (key, initialState) => {
 
 export default function App() {
   const [searchTerm, setSearchTerm] = useStorageState('search', '');
-  const [stories, setStories] = React.useState(initialStories);
+  const [stories, setStories] = React.useState([]);
 
   const handleRemoveStory = (item) => {
     const newStories = stories.filter(
@@ -30,6 +30,17 @@ export default function App() {
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
+
+  const getAsyncStories = () =>
+    new Promise((resolve) =>
+      setTimeout(() => resolve({ data: { stories: initialStories } }), 2000)
+    );
+
+  React.useEffect(() => {
+    getAsyncStories().then((result) => {
+      setStories(result.data.stories);
+    });
+  }, []);
 
   const searchedStories = stories.filter((story) =>
     story.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -45,7 +56,11 @@ export default function App() {
       >
         <p>search:</p>
       </InputWithLabel>
-      <List list={searchedStories} onRemoveItem={handleRemoveStory} />
+      {stories.length ? (
+        <List list={searchedStories} onRemoveItem={handleRemoveStory} />
+      ) : (
+        <p>Loading...</p>
+      )}
     </>
   );
 }
