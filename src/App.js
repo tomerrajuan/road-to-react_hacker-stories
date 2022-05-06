@@ -52,10 +52,14 @@ export default function App() {
       <h1>Hello World</h1>
       <InputWithLabel
         id="search"
-        label="Search"
         value={searchTerm}
         onInputChange={handleSearch}
-      />
+      >
+        
+          <p>
+           search:
+          </p>
+      </InputWithLabel>
       <List list={searchedStories} />
     </div>
   );
