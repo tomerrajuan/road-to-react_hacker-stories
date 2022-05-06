@@ -2,7 +2,7 @@
 import Item from './Item';
 
 const List = ({ list, onRemoveItem }) => (
-    <ul>
+    <ul className="list">
       {list.map((item) => (
         <Item key={item.objectID} item={item} onRemoveItem={onRemoveItem} />
       ))}
