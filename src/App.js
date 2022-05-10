@@ -4,7 +4,7 @@ import InputWithLabel from './components/InputWithLabel';
 import { initialStories } from './utils/stories';
 
 const useStorageState = (key, initialState) => {
-  const [value, setValue] = React.useState(
+  const [value, setValue] = useState(
     localStorage.getItem(key) || initialState
   );
 
