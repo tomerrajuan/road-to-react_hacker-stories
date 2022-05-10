@@ -16,12 +16,13 @@ const useStorageState = (key, initialState) => {
 export default function App() {
   const [searchTerm, setSearchTerm] = useStorageState('search', '');
   const [stories, setStories] = useState([]);
-  
+  const [isError, setIsError] = useState(false);
+
   const getAsyncStories = () =>
-  new Promise((resolve) =>
-    setTimeout(() => resolve({ data: { stories: initialStories } }), 2000)
-  );
-  
+    new Promise((resolve) =>
+      setTimeout(() => resolve({ data: { stories: initialStories } }), 2000)
+    );
+
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
@@ -35,9 +36,13 @@ export default function App() {
   };
 
   useEffect(() => {
-    getAsyncStories().then((result) => {
-      setStories(result.data.stories);
-    });
+    getAsyncStories()
+      .then((result) => {
+        setStories(result.data.stories);
+      })
+      .catch(() => {
+        setIsError(true);
+      });
   }, []);
 
   const searchedStories = stories.filter((story) =>
@@ -46,6 +51,7 @@ export default function App() {
 
   return (
     <>
+    {isError && <p>Something went wrong ...</p>}
       <InputWithLabel
         id="search"
         value={searchTerm}
@@ -57,7 +63,7 @@ export default function App() {
       {stories.length ? (
         <List list={searchedStories} onRemoveItem={handleRemoveStory} />
       ) : (
-        <p>Loading...</p>
+        <p>Loading stories from api/database...</p>
       )}
     </>
   );
