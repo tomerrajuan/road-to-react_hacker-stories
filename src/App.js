@@ -1,12 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import List from './components/List';
 import InputWithLabel from './components/InputWithLabel';
 import { initialStories } from './utils/stories';
 
 const useStorageState = (key, initialState) => {
-  const [value, setValue] = useState(
-    localStorage.getItem(key) || initialState
-  );
+  const [value, setValue] = useState(localStorage.getItem(key) || initialState);
 
   useEffect(() => {
     localStorage.setItem(key, value);
