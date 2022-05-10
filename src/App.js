@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
 import List from './components/List';
 import InputWithLabel from './components/InputWithLabel';
 import { initialStories } from './utils/stories';
@@ -8,7 +8,7 @@ const useStorageState = (key, initialState) => {
     localStorage.getItem(key) || initialState
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     localStorage.setItem(key, value);
   }, [value, key]);
 
@@ -17,7 +17,7 @@ const useStorageState = (key, initialState) => {
 
 export default function App() {
   const [searchTerm, setSearchTerm] = useStorageState('search', '');
-  const [stories, setStories] = React.useState([]);
+  const [stories, setStories] = useState([]);
 
   const handleRemoveStory = (item) => {
     const newStories = stories.filter(
@@ -36,7 +36,7 @@ export default function App() {
       setTimeout(() => resolve({ data: { stories: initialStories } }), 2000)
     );
 
-  React.useEffect(() => {
+  useEffect(() => {
     getAsyncStories().then((result) => {
       setStories(result.data.stories);
     });
