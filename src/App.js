@@ -66,7 +66,7 @@ export default function App() {
 
   const handleRemoveStory = (item) => {
     dispatchStories({
-      type: 'REMOVE_STORIES',
+      type: 'REMOVE_STORY',
       payload: item,
     });
   };
