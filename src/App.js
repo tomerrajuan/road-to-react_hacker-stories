@@ -14,19 +14,19 @@ const useStorageState = (key, initialState) => {
 };
 
 const storiesReducer = (state, action) => {
-  switch (action.payload) {
+  switch (action.type) {
     case 'SET_STORIES':
       return action.payload;
     case 'REMOVE_STORY':
       return state.filter(
         (story) => action.payload.objectID !== story.objectID
       );
-      
     default:
       throw new Error();
   }
 };
 
+// start of app function
 export default function App() {
   const [searchTerm, setSearchTerm] = useStorageState('search', '');
   const [isError, setIsError] = useState(false);
@@ -56,9 +56,7 @@ export default function App() {
           payload: result.data.stories,
         });
       })
-      .catch(() => {
-        setIsError(true);
-      });
+      .catch(() => setIsError(true));
   }, []);
 
   const searchedStories = stories.filter((story) =>
