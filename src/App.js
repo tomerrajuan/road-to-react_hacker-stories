@@ -15,12 +15,32 @@ const useStorageState = (key, initialState) => {
 
 const storiesReducer = (state, action) => {
   switch (action.type) {
-    case 'SET_STORIES':
-      return action.payload;
+    case 'STORIES_FETCH_INIT':
+      return {
+        ...state,
+        isLoading: true,
+        isError: false,
+      };
+    case 'STORIES_FETCH_SUCCESS':
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        data: action.payload,
+      };
+    case 'STORIES_FETCH_FAILURE':
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+      };
     case 'REMOVE_STORY':
-      return state.filter(
-        (story) => action.payload.objectID !== story.objectID
-      );
+      return {
+        ...state,
+        data: state.data.filter(
+          (story) => action.payload.objectID !== story.objectID
+        ),
+      };
     default:
       throw new Error();
   }
@@ -29,8 +49,11 @@ const storiesReducer = (state, action) => {
 // start of app function
 export default function App() {
   const [searchTerm, setSearchTerm] = useStorageState('search', '');
-  const [isError, setIsError] = useState(false);
-  const [stories, dispatchStories] = useReducer(storiesReducer, []);
+  const [stories, dispatchStories] = useReducer(storiesReducer, {
+    data: [],
+    isLoading: false,
+    isError: false,
+  });
 
   const getAsyncStories = () =>
     new Promise((resolve) =>
@@ -49,23 +72,31 @@ export default function App() {
   };
 
   useEffect(() => {
+    dispatchStories({ type: 'STORIES_FETCH_INIT' });
+
     getAsyncStories()
       .then((result) => {
         dispatchStories({
-          type: 'SET_STORIES',
+          type: 'STORIES_FETCH_SUCCESS',
           payload: result.data.stories,
         });
       })
-      .catch(() => setIsError(true));
+      .catch(() => dispatchStories({ type: 'STORIES_FETCH_FAILURE' }));
   }, []);
 
-  const searchedStories = stories.filter((story) =>
+  const searchedStories = stories.data.filter((story) =>
     story.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <>
-      {isError && <p>Something went wrong ...</p>}
+      {stories.isError && <p>Something went wrong ...</p>}
+
+      {stories.isLoading ? (
+        <p>Loading ...</p>
+      ) : (
+        <List list={searchedStories} onRemoveItem={handleRemoveStory} />
+      )}
       <InputWithLabel
         id="search"
         value={searchTerm}
@@ -74,11 +105,6 @@ export default function App() {
       >
         <p>search:</p>
       </InputWithLabel>
-      {stories.length ? (
-        <List list={searchedStories} onRemoveItem={handleRemoveStory} />
-      ) : (
-        <p>Loading stories from api/database...</p>
-      )}
     </>
   );
 }
