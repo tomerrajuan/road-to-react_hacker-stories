@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import List from './components/List';
 import InputWithLabel from './components/InputWithLabel';
-import { initialStories } from './utils/stories';
-import {storiesReducer} from './reducer'
+// import { initialStories } from './utils/stories';
+import { storiesReducer } from './reducer';
+
+const API_ENDPOINT = 'https://hn.algolia.com/api/v1/search?query=';
 
 const useStorageState = (key, initialState) => {
   const [value, setValue] = useState(localStorage.getItem(key) || initialState);
@@ -23,10 +25,15 @@ export default function App() {
     isError: false,
   });
 
-  const getAsyncStories = () =>
-    new Promise((resolve) =>
-      setTimeout(() => resolve({ data: { stories: initialStories } }), 2000)
-    );
+  // const getAsyncStories = () => {
+  //   fetch('http://example.com/movies.json')
+  //     .then((response) => response.json())
+  //     .then((data) => console.log("data: ", data));
+  // };
+
+  // new Promise((resolve) =>
+  //   setTimeout(() => resolve({ data: { stories: initialStories } }), 2000)
+  // );
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -41,15 +48,18 @@ export default function App() {
 
   useEffect(() => {
     dispatchStories({ type: 'STORIES_FETCH_INIT' });
-
-    getAsyncStories()
+ 
+    fetch(`${API_ENDPOINT}react`) // B
+      .then((response) => response.json()) // C
       .then((result) => {
         dispatchStories({
           type: 'STORIES_FETCH_SUCCESS',
-          payload: result.data.stories,
+          payload: result.hits, // D
         });
       })
-      .catch(() => dispatchStories({ type: 'STORIES_FETCH_FAILURE' }));
+      .catch(() =>
+        dispatchStories({ type: 'STORIES_FETCH_FAILURE' })
+      );
   }, []);
 
   const searchedStories = stories.data.filter((story) =>
