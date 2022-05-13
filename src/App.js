@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import List from './components/List';
 import InputWithLabel from './components/InputWithLabel';
 import { initialStories } from './utils/stories';
@@ -13,10 +13,20 @@ const useStorageState = (key, initialState) => {
   return [value, setValue];
 };
 
+const storiesReducer = (state, action) => {
+  if (action.type === 'SET_STORIES') {
+    return action.payload;
+  } else if (action.type === 'REMOVE_STORY') {
+    return state.filter((story) => action.payload.objectID !== story.objectID);
+  } else {
+    throw new Error();
+  }
+};
+
 export default function App() {
   const [searchTerm, setSearchTerm] = useStorageState('search', '');
-  const [stories, setStories] = useState([]);
   const [isError, setIsError] = useState(false);
+  const [stories, dispatchStories] = useReducer(storiesReducer, []);
 
   const getAsyncStories = () =>
     new Promise((resolve) =>
@@ -28,17 +38,19 @@ export default function App() {
   };
 
   const handleRemoveStory = (item) => {
-    const newStories = stories.filter(
-      (story) => item.objectID !== story.objectID
-    );
-
-    setStories(newStories);
+    dispatchStories({
+      type: 'REMOVE_STORIES',
+      payload: item,
+    });
   };
 
   useEffect(() => {
     getAsyncStories()
       .then((result) => {
-        setStories(result.data.stories);
+        dispatchStories({
+          type: 'SET_STORIES',
+          payload: result.data.stories,
+        });
       })
       .catch(() => {
         setIsError(true);
@@ -51,7 +63,7 @@ export default function App() {
 
   return (
     <>
-    {isError && <p>Something went wrong ...</p>}
+      {isError && <p>Something went wrong ...</p>}
       <InputWithLabel
         id="search"
         value={searchTerm}
