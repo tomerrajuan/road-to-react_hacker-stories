@@ -68,21 +68,21 @@ export default function App() {
 
   return (
     <>
-      {stories.isError && <p>Something went wrong ...</p>}
-
-      {stories.isLoading ? (
-        <p>Loading ...</p>
-      ) : (
-        <List list={searchedStories} onRemoveItem={handleRemoveStory} />
-      )}
       <InputWithLabel
         id="search"
         value={searchTerm}
         onInputChange={handleSearch}
         isFocused
       >
-        <p>search:</p>
+      <p>search:</p>
       </InputWithLabel>
+      
+      {stories.isError && <p>Something went wrong ...</p>}
+      {stories.isLoading ? (
+        <p>Loading ...</p>
+      ) : (
+        <List list={searchedStories} onRemoveItem={handleRemoveStory} />
+      )}
     </>
   );
 }

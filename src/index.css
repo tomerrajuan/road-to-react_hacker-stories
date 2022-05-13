@@ -20,10 +20,15 @@ code {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 400px;
-  margin: 10px 0;
+  margin: 5px 0;
+  width: 700px;
+  border-bottom: 1px solid grey;
 }
 
 .list-item span {
-  margin: 5px;
+  margin: 10px;
+}
+
+.list-item button {
+  margin: 15px;
 }
