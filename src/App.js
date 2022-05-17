@@ -25,21 +25,20 @@ export default function App() {
     isError: false,
   });
 
-  const getAsyncStories = (arg) => {
-    fetch(`${API_ENDPOINT}${arg ? arg : 'react'}`)
+  const getAsyncStories = () => {
+    fetch(`${API_ENDPOINT}${searchTerm ? searchTerm : 'react'}`)
       .then((response) => response.json())
       .then((result) => {
-        dispatchStories({
-          type: 'STORIES_FETCH_SUCCESS',
-          payload: result.hits,
-        });
+          dispatchStories({
+            type: 'STORIES_FETCH_SUCCESS',
+            payload: result.hits,
+          });
       })
       .catch(() => dispatchStories({ type: 'STORIES_FETCH_FAILURE' }));
   };
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
-    getAsyncStories(event.target.value);
   };
 
   const handleRemoveStory = (item) => {
@@ -52,11 +51,7 @@ export default function App() {
   useEffect(() => {
     getAsyncStories();
     dispatchStories({ type: 'STORIES_FETCH_INIT' });
-  }, []);
-
-  const searchedStories = stories.data.filter((story) =>
-    story.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  }, [searchTerm]);
 
   return (
     <>
@@ -73,7 +68,7 @@ export default function App() {
       {stories.isLoading ? (
         <p>Loading ...</p>
       ) : (
-        <List list={searchedStories} onRemoveItem={handleRemoveStory} />
+        <List list={stories.data} onRemoveItem={handleRemoveStory} />
       )}
     </>
   );
