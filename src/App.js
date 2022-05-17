@@ -26,7 +26,9 @@ export default function App() {
   });
 
   const getAsyncStories = () => {
-    fetch(`${API_ENDPOINT}${searchTerm ? searchTerm : 'react'}`)
+    if (!searchTerm) return;
+    
+    fetch(`${API_ENDPOINT}${searchTerm}`)
       .then((response) => response.json())
       .then((result) => {
           dispatchStories({
@@ -66,7 +68,7 @@ export default function App() {
 
       {stories.isError && <p>Something went wrong ...</p>}
       {stories.isLoading ? (
-        <p>Loading ...</p>
+        <p>Search for stories</p>
       ) : (
         <List list={stories.data} onRemoveItem={handleRemoveStory} />
       )}
