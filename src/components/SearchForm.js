@@ -14,7 +14,7 @@ export default function SearchForm({
         onInputChange={onSearchInput}
         isFocused
       >
-        <p>search:</p>
+        search for stories:
       </InputWithLabel>
       <button type="submit" disabled={!searchTerm}>
         Submit
