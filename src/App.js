@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, useCallback } from 'react';
 import List from './components/List';
 import InputWithLabel from './components/InputWithLabel';
 // import { initialStories } from './utils/stories';
@@ -25,7 +25,7 @@ export default function App() {
     isError: false,
   });
 
-  const getAsyncStories = () => {
+  const handleFetchStories  = useCallback(() => {
     if (!searchTerm) return;
     
     fetch(`${API_ENDPOINT}${searchTerm}`)
@@ -37,7 +37,8 @@ export default function App() {
           });
       })
       .catch(() => dispatchStories({ type: 'STORIES_FETCH_FAILURE' }));
-  };
+      
+  }, [searchTerm]);
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -51,9 +52,10 @@ export default function App() {
   };
 
   useEffect(() => {
-    getAsyncStories();
     dispatchStories({ type: 'STORIES_FETCH_INIT' });
-  }, [searchTerm]);
+    
+    handleFetchStories ();
+  }, [handleFetchStories ]);
 
   return (
     <>
