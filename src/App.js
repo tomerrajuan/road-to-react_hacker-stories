@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useReducer, useCallback } from 'react';
 import List from './components/List';
-import InputWithLabel from './components/InputWithLabel';
-// import { initialStories } from './utils/stories';
 import { storiesReducer } from './reducer';
 import axios from 'axios';
+import SearchForm from './components/SearchForm';
 
 const API_ENDPOINT = 'https://hn.algolia.com/api/v1/search?query=';
 
@@ -48,8 +47,9 @@ export default function App() {
     setSearchTerm(event.target.value);
   };
 
-  const handleSearchSubmit = () => {
+  const handleSearchSubmit = (event) => {
     setUrl(`${API_ENDPOINT}${searchTerm}`);
+    event.preventDefault();
   };
 
   const handleRemoveStory = (item) => {
@@ -66,20 +66,11 @@ export default function App() {
   return (
     <>
       <h1>My Hacker Stories</h1>
-
-      <form onSubmit={handleSearchSubmit}>
-        <InputWithLabel
-          id="search"
-          value={searchTerm}
-          onInputChange={handleSearchInput}
-          isFocused
-        >
-          <p>search:</p>
-        </InputWithLabel>
-        <button type="submit" disabled={!searchTerm}>
-          Submit
-        </button>
-      </form>
+      <SearchForm
+        searchTerm={searchTerm}
+        onSearchInput={handleSearchInput}
+        onSearchSubmit={handleSearchSubmit}
+      />
 
       {stories.isError && <p>Something went wrong ...</p>}
       {stories.isLoading ? (
