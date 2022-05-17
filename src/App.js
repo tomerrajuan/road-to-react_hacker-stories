@@ -25,15 +25,17 @@ export default function App() {
     isError: false,
   });
 
-  // const getAsyncStories = () => {
-  //   fetch('http://example.com/movies.json')
-  //     .then((response) => response.json())
-  //     .then((data) => console.log("data: ", data));
-  // };
-
-  // new Promise((resolve) =>
-  //   setTimeout(() => resolve({ data: { stories: initialStories } }), 2000)
-  // );
+  const getAsyncStories = () => {
+    fetch(`${API_ENDPOINT}react`)
+      .then((response) => response.json())
+      .then((result) => {
+        dispatchStories({
+          type: 'STORIES_FETCH_SUCCESS',
+          payload: result.hits,
+        });
+      })
+      .catch(() => dispatchStories({ type: 'STORIES_FETCH_FAILURE' }));
+  };
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -48,18 +50,7 @@ export default function App() {
 
   useEffect(() => {
     dispatchStories({ type: 'STORIES_FETCH_INIT' });
- 
-    fetch(`${API_ENDPOINT}react`) // B
-      .then((response) => response.json()) // C
-      .then((result) => {
-        dispatchStories({
-          type: 'STORIES_FETCH_SUCCESS',
-          payload: result.hits, // D
-        });
-      })
-      .catch(() =>
-        dispatchStories({ type: 'STORIES_FETCH_FAILURE' })
-      );
+    getAsyncStories();
   }, []);
 
   const searchedStories = stories.data.filter((story) =>
@@ -74,9 +65,9 @@ export default function App() {
         onInputChange={handleSearch}
         isFocused
       >
-      <p>search:</p>
+        <p>search:</p>
       </InputWithLabel>
-      
+
       {stories.isError && <p>Something went wrong ...</p>}
       {stories.isLoading ? (
         <p>Loading ...</p>
