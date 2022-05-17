@@ -10,7 +10,7 @@ const useStorageState = (key, initialState) => {
   const [value, setValue] = useState(localStorage.getItem(key) || initialState);
 
   useEffect(() => {
-    localStorage.setItem(key, value);    
+    localStorage.setItem(key, value);
   }, [value, key]);
 
   return [value, setValue];
@@ -18,17 +18,20 @@ const useStorageState = (key, initialState) => {
 
 // start of app function
 export default function App() {
-  const [searchTerm, setSearchTerm] = useStorageState('search', '');
   const [stories, dispatchStories] = useReducer(storiesReducer, {
     data: [],
     isLoading: false,
     isError: false,
   });
-
-  const handleFetchStories  = useCallback(() => {
+  
+  const [searchTerm, setSearchTerm] = useStorageState('search', '');
+  
+  const [url, setUrl] = useState(`${API_ENDPOINT}${searchTerm}`);
+  
+  const handleFetchStories = useCallback(() => {
     if (!searchTerm) return;
-    
-    fetch(`${API_ENDPOINT}${searchTerm}`)
+
+    fetch(url)
       .then((response) => response.json())
       .then((result) => {
           dispatchStories({
@@ -37,11 +40,14 @@ export default function App() {
           });
       })
       .catch(() => dispatchStories({ type: 'STORIES_FETCH_FAILURE' }));
-      
-  }, [searchTerm]);
+  }, [url]);
 
-  const handleSearch = (event) => {
+  const handleSearchInput = (event) => {
     setSearchTerm(event.target.value);
+  };
+
+  const handleSearchSubmit = () => {
+    setUrl(`${API_ENDPOINT}${searchTerm}`);
   };
 
   const handleRemoveStory = (item) => {
@@ -52,25 +58,26 @@ export default function App() {
   };
 
   useEffect(() => {
-    dispatchStories({ type: 'STORIES_FETCH_INIT' });
-    
-    handleFetchStories ();
-  }, [handleFetchStories ]);
+    handleFetchStories();
+  }, [handleFetchStories]);
 
   return (
     <>
       <InputWithLabel
         id="search"
         value={searchTerm}
-        onInputChange={handleSearch}
+        onInputChange={handleSearchInput}
         isFocused
       >
         <p>search:</p>
       </InputWithLabel>
+      <button disabled={!searchTerm} onClick={handleSearchSubmit}>
+        Submit
+      </button>
 
       {stories.isError && <p>Something went wrong ...</p>}
       {stories.isLoading ? (
-        <p>Search for stories</p>
+        <p>Loading stories...</p>
       ) : (
         <List list={stories.data} onRemoveItem={handleRemoveStory} />
       )}
