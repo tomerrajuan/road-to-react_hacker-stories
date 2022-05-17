@@ -3,6 +3,7 @@ import List from './components/List';
 import InputWithLabel from './components/InputWithLabel';
 // import { initialStories } from './utils/stories';
 import { storiesReducer } from './reducer';
+import axios from 'axios';
 
 const API_ENDPOINT = 'https://hn.algolia.com/api/v1/search?query=';
 
@@ -31,12 +32,11 @@ export default function App() {
   const handleFetchStories = useCallback(() => {
     if (!searchTerm) return;
 
-    fetch(url)
-      .then((response) => response.json())
+    axios.get(url)
       .then((result) => {
           dispatchStories({
             type: 'STORIES_FETCH_SUCCESS',
-            payload: result.hits,
+            payload: result.data.hits,
           });
       })
       .catch(() => dispatchStories({ type: 'STORIES_FETCH_FAILURE' }));
