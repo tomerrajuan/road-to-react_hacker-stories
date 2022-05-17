@@ -10,7 +10,7 @@ const useStorageState = (key, initialState) => {
   const [value, setValue] = useState(localStorage.getItem(key) || initialState);
 
   useEffect(() => {
-    localStorage.setItem(key, value);
+    localStorage.setItem(key, value);    
   }, [value, key]);
 
   return [value, setValue];
@@ -25,8 +25,8 @@ export default function App() {
     isError: false,
   });
 
-  const getAsyncStories = () => {
-    fetch(`${API_ENDPOINT}react`)
+  const getAsyncStories = (arg) => {
+    fetch(`${API_ENDPOINT}${arg ? arg : 'react'}`)
       .then((response) => response.json())
       .then((result) => {
         dispatchStories({
@@ -39,6 +39,7 @@ export default function App() {
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
+    getAsyncStories(event.target.value);
   };
 
   const handleRemoveStory = (item) => {
@@ -49,8 +50,8 @@ export default function App() {
   };
 
   useEffect(() => {
-    dispatchStories({ type: 'STORIES_FETCH_INIT' });
     getAsyncStories();
+    dispatchStories({ type: 'STORIES_FETCH_INIT' });
   }, []);
 
   const searchedStories = stories.data.filter((story) =>
