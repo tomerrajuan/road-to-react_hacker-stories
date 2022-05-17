@@ -24,22 +24,24 @@ export default function App() {
     isLoading: false,
     isError: false,
   });
-  
+
   const [searchTerm, setSearchTerm] = useStorageState('search', '');
-  
+
   const [url, setUrl] = useState(`${API_ENDPOINT}${searchTerm}`);
-  
-  const handleFetchStories = useCallback(() => {
+
+  const handleFetchStories = useCallback(async () => {
     if (!searchTerm) return;
 
-    axios.get(url)
-      .then((result) => {
-          dispatchStories({
-            type: 'STORIES_FETCH_SUCCESS',
-            payload: result.data.hits,
-          });
-      })
-      .catch(() => dispatchStories({ type: 'STORIES_FETCH_FAILURE' }));
+    try {
+      const result = await axios.get(url);
+
+      dispatchStories({
+        type: 'STORIES_FETCH_SUCCESS',
+        payload: result.data.hits,
+      });
+    } catch (error) {
+      dispatchStories({ type: 'STORIES_FETCH_FAILURE' });
+    }
   }, [url]);
 
   const handleSearchInput = (event) => {
