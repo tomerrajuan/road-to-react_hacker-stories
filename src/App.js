@@ -65,17 +65,21 @@ export default function App() {
 
   return (
     <>
-      <InputWithLabel
-        id="search"
-        value={searchTerm}
-        onInputChange={handleSearchInput}
-        isFocused
-      >
-        <p>search:</p>
-      </InputWithLabel>
-      <button disabled={!searchTerm} onClick={handleSearchSubmit}>
-        Submit
-      </button>
+      <h1>My Hacker Stories</h1>
+
+      <form onSubmit={handleSearchSubmit}>
+        <InputWithLabel
+          id="search"
+          value={searchTerm}
+          onInputChange={handleSearchInput}
+          isFocused
+        >
+          <p>search:</p>
+        </InputWithLabel>
+        <button type="submit" disabled={!searchTerm}>
+          Submit
+        </button>
+      </form>
 
       {stories.isError && <p>Something went wrong ...</p>}
       {stories.isLoading ? (
